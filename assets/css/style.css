@@ -1,7 +1,9 @@
 html, body{
   font-size: 1.3rem;
+  font-family: 'Raleway', sans-serif;
 }
 
+/* --- CONTAINER --- */
 #container{
   border: 3px solid blue;
   border-radius: 50px;
@@ -11,20 +13,7 @@ html, body{
   padding-bottom: 20px;
 }
 
-.slider {
-  /* background-color: yellow; */
-	overflow-y: hidden;
-	max-height: 1000px;
-	transition-property: all;
-	transition-duration: .5s;
-	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-}
-
-.slider.closed {
-  /* background-color: red; */
-	max-height: 0;
-}
-
+/* --- HOME PAGE FORM --- */
 #main-title{
   text-align: center;
 }
@@ -40,7 +29,6 @@ html, body{
   font-size: 1.7rem;
   margin: 0;
   margin-bottom: 5px;
-
 }
 
 #form-container #player1-label, #form-container #player2-label{
@@ -49,7 +37,8 @@ html, body{
   display: block;
   margin: 0 auto;
   margin-bottom: 30px;
-
+  outline: none;
+  width: 60%;
 }
 
 #form-container button{
@@ -63,4 +52,62 @@ html, body{
 
 #form-container button:hover{
   box-shadow: 2px 2px 15px 2px black;
+}
+
+/* --- TRIS GAME --- */
+#top-info-container{
+  /* border: 1px solid red; */
+  text-align: center;
+}
+
+#top-info-container .player-info{
+  display: inline-block;
+  /* border: 1px solid black; */
+  margin: 10px 20px;
+}
+
+#top-info-container #player1 .player-icon{
+  display: inline-block;
+  background-image: url("../img/x_icon.png");
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  margin-bottom: -15px;
+  /* border-right: 5px solid rgba(100, 100, 100, 0.3); */
+}
+
+#top-info-container #player2 .player-icon{
+  display: inline-block;
+  background-image: url("../img/o_icon.png");
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  margin-bottom: -15px;
+  /* border-right: 5px solid rgba(100, 100, 100, 0.3); */
+}
+
+#top-info-container .player-name{
+  display: inline;
+  margin: 20px 10px;
+
+}
+
+#top-info-container .player-points{
+  display: inline;
+  margin: 0 10px;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+#turn-container{
+  margin-top: 50px;
+}
+
+/*--- TRIS GRID ---*/
+#tris-grid div{
+  border: 1px solid black;
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+
 }
