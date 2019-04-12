@@ -6,8 +6,8 @@ var player2_score = 0;
 var turns_counter = 0;
 
 $(document).ready(function(){
-  homePage();
-  // showTris();
+  //homePage();
+  showTris();
   addEventsOnButtons();
 
 });
@@ -130,14 +130,6 @@ function fixGridBorders(row,col){
   }
 }
 
-// --- CHECK WINS ---
-function checkTrisWins(){
-  if(turns_counter < 5)  return;
-  console.log("Handle"+turns_counter);
-  // alert("possible tris");
-
-}
-
 // --- CLICK EVENT ON TRIS GRID ---
 function addEventsOnCells(){
   $(".grid-item").on("click", function(){
@@ -145,14 +137,21 @@ function addEventsOnCells(){
     if(player_turn == "player1"){
       $(this).css("background", "url('assets/img/x_icon.png')");
       $(this).css("background-size", "cover");
+      $(this).attr("symb","X");
     }else{
       $(this).css("background", "url('assets/img/o_icon.png')");
       $(this).css("background-size", "cover");
+      $(this).attr("symb","O");
     }
     turns_counter++;
-    checkTrisWins();
-    changeTurn();
-    $(this).off("click");
+    if(checkTrisWins($(this))){
+      $(".grid-item").off("click");
+      console.log("You win!");
+      return;
+    }else{
+      $(this).off("click");
+      changeTurn();
+    }
   });
 }
 
@@ -168,4 +167,60 @@ function changeTurn(player_id){
     $("#turn-container .player-name").text(player1_name);
   }
 
+}
+
+// --- CHECK WINS ---
+function checkTrisWins(cell){
+  if(turns_counter < 5)  return;
+  // alert("possible tris");
+
+  var row = cell.attr("row");
+  var col = cell.attr("col");
+  var symb = cell.attr("symb");
+
+  if(checkTrisOnRow(row,col,symb))  return true;
+  if(checkTrisOnCol(row,col,symb))  return true;
+  if(checkTrisOnDiag(row,col,symb)) return true;
+
+  return false;
+}
+
+// --- CHECK TRIS ON ROWS
+function checkTrisOnRow(row, col, symb){
+  var itemsOnRow = [];
+  itemsOnRow[0] = $($(".grid-item[row='"+row+"']")[0]).attr("symb");
+  itemsOnRow[1] = $($(".grid-item[row='"+row+"']")[1]).attr("symb");
+  itemsOnRow[2] = $($(".grid-item[row='"+row+"']")[2]).attr("symb");
+
+  if((itemsOnRow[0] == itemsOnRow[1]) && (itemsOnRow[0] == itemsOnRow[2]))
+    return true;
+
+  return false;
+}
+
+// --- CHECK TRIS ON COLUMNS
+function checkTrisOnCol(row, col, symb){
+  var itemsOnCol = [];
+  itemsOnCol[0] = $($(".grid-item[col='"+col+"']")[0]).attr("symb");
+  itemsOnCol[1] = $($(".grid-item[col='"+col+"']")[1]).attr("symb");
+  itemsOnCol[2] = $($(".grid-item[col='"+col+"']")[2]).attr("symb");
+
+  if((itemsOnCol[0] == itemsOnCol[1]) && (itemsOnCol[0] == itemsOnCol[2]))
+    return true;
+
+  return false;
+}
+
+// --- CHECK TRIS ON DIAGONALS
+function checkTrisOnDiag(row, col, symb){
+  var itemsOnDiag = [];
+  itemsOnDiag[0] = $($(".grid-item[col='"+col+"']")[0]).attr("symb");
+  itemsOnDiag[1] = $($(".grid-item[col='"+col+"']")[1]).attr("symb");
+  itemsOnDiag[2] = $($(".grid-item[col='"+col+"']")[2]).attr("symb");
+
+  if((itemsOnDiag[0] == itemsOnDiag[1]) && (itemsOnDiag[0] == itemsOnDiag[2]))
+    return true;
+
+
+  return false;
 }
