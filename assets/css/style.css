@@ -10,7 +10,7 @@ html, body{
   width: 50%;
   margin: auto;
   margin-top: 50px;
-  padding-bottom: 20px;
+  padding-bottom: 50px;
 }
 
 /* --- HOME PAGE FORM --- */
@@ -58,6 +58,7 @@ html, body{
 #top-info-container{
   /* border: 1px solid red; */
   text-align: center;
+  font-size: 1.3em;
 }
 
 #top-info-container .player-info{
@@ -101,13 +102,21 @@ html, body{
 
 #turn-container{
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 /*--- TRIS GRID ---*/
-#tris-grid div{
-  border: 1px solid black;
-  display: inline-block;
-  width: 150px;
-  height: 150px;
+#tris-grid-container{
+  display: grid;
+  grid-template-columns: 150px 150px 150px;
+  grid-template-rows: 150px 150px 150px;
+  justify-content: center;
+  grid-gap: 2px;
+}
 
+#tris-grid-container .grid-item{
+  border: 1px solid grey;
+  text-align: center;
+  cursor: pointer;
+  padding: 50px;
 }

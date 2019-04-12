@@ -1,7 +1,13 @@
-$(document).ready(function(){
+var player1_name = "Pl-1";
+var player2_name = "Pl-2";
+var player_turn = "player1";
+var player1_score = 0;
+var player2_score = 0;
+var turns_counter = 0;
 
-  //showTris("Player1","Player2");
+$(document).ready(function(){
   homePage();
+  // showTris();
   addEventsOnButtons();
 
 });
@@ -36,7 +42,9 @@ function addEventsOnButtons(){
         player2 = "Player2";
       }
       $(this).addClass("fadeOut");
-      showTris(player1, player2);
+      player1_name = player1;
+      player2_name = player2;
+      showTris();
     }else if ($(this).text() == "Reset") {
       resetAll();
     }
@@ -50,58 +58,114 @@ function resetAll(){
 }
 
 //--- SHOW TRIS \ START BUTTON ---
-function showTris(p1_name, p2_name){
+function showTris(){
   $("#container").empty();
   $("#container").removeClass("fadeOut").removeClass("zoomInDown");
   $("#container").addClass("fadeIn");
 
-  showTrisData(p1_name, p2_name);
+  showTrisData();
   showTrisGrid();
-
-  $("#container").removeClass("closed");
-  handleTrisGame();
+  addEventsOnCells();
 }
 
-function showTrisData(p1_name, p2_name){
+// --- TRIS - TOP INFO ---
+function showTrisData(){
   $("#container").append('<div id="top-info-container"></div>');
 
   var player1_doms = '\
   <div class="player-info" id="player1">\
     <div class="player-icon"></div>\
-    <p class="player-name">'+ p1_name +'</p>\
-    <p class="player-points">0</p>\
+    <p class="player-name">'+ player1_name +'</p>\
+    <p class="player-points">'+ player1_score +'</p>\
   </div>';
   $("#top-info-container").append(player1_doms);
 
   var player2_doms = '\
   <div class="player-info" id="player2">\
     <div class="player-icon"></div>\
-    <p class="player-name">'+ p2_name +'</p>\
-    <p class="player-points">0</p>\
+    <p class="player-name">'+ player2_name +'</p>\
+    <p class="player-points">'+ player2_score +'</p>\
   </div>';
   $("#top-info-container").append(player2_doms);
 
   var player_turn_doms = '\
   <div id="turn-container">\
-    <div class="player-info" id="player1">\
-      <span>Turn of</span><p class="player-name">'+ p1_name +'</p>\
+    <div class="player-info" id="'+ player_turn +'">\
+      <span>Turn of</span><p class="player-name">'+ (player_turn=="player1" ? player1_name : player2_name) +'</p>\
       <div class="player-icon"></div>\
     </div>\
   </div>';
   $("#top-info-container").append(player_turn_doms);
 }
 
+// --- TRIS - SHOW GRID ---
 function showTrisGrid(){
-  $("#container").append('<div id="tris-grid"></div>');
-
-  for(var i=1; i<4; i++){
-    $("#tris-grid").append('<div id="r'+i+'c1"></div>');
-    $("#tris-grid").append('<div id="r'+i+'c2"></div>');
-    $("#tris-grid").append('<div id="r'+i+'c3"></div>');
-    $("#tris-grid:last-child::after").css("display","block");
+  $("#container").append('<div id="tris-grid-container"></div>');
+  var row=-1;
+  var col=0;
+  for(var i=0; i<9; i++){
+    col = i%3;
+    row = col==0 ? (row+1) : row;
+    $("#tris-grid-container").append('<div class="grid-item" row="'+row+'" col="'+col+'"></div>');
+    fixGridBorders(row,col);
   }
 }
 
-function handleTrisGame(){
-  // console.log("tris");
+// --- FIX GRID BORDERS ---
+function fixGridBorders(row,col){
+  var item = $(".grid-item").last();
+  if(row == 0){  //first row
+    item.css("border-top","0");
+    if(col == 0)  item.css("border-left","0");
+    else if(col == 2)  item.css("border-right","0");
+  }else
+  if(row == 1){ //second row
+    if(col == 0)  item.css("border-left","0");
+    else if(col == 2)  item.css("border-right","0");
+  }else
+  if(row == 2){ //third row
+    item.css("border-bottom","0");
+    if(col == 0)  item.css("border-left","0");
+    else if(col == 2)  item.css("border-right","0");
+  }
+}
+
+// --- CHECK WINS ---
+function checkTrisWins(){
+  if(turns_counter < 5)  return;
+  console.log("Handle"+turns_counter);
+  // alert("possible tris");
+
+}
+
+// --- CLICK EVENT ON TRIS GRID ---
+function addEventsOnCells(){
+  $(".grid-item").on("click", function(){
+    // alert("click on " + $(this).attr("row") + "-" + $(this).attr("col"));
+    if(player_turn == "player1"){
+      $(this).css("background", "url('assets/img/x_icon.png')");
+      $(this).css("background-size", "cover");
+    }else{
+      $(this).css("background", "url('assets/img/o_icon.png')");
+      $(this).css("background-size", "cover");
+    }
+    turns_counter++;
+    checkTrisWins();
+    changeTurn();
+    $(this).off("click");
+  });
+}
+
+// --- CHANGE PLAYER TURN AFTER CLICK ---
+function changeTurn(player_id){
+  if(player_turn == "player1"){
+    player_turn = "player2";
+    $("#turn-container .player-info").attr("id",player_turn);
+    $("#turn-container .player-name").text(player2_name);
+  }else{
+    player_turn = "player1";
+    $("#turn-container .player-info").attr("id",player_turn);
+    $("#turn-container .player-name").text(player1_name);
+  }
+
 }
