@@ -6,8 +6,8 @@ var player2_score = 0;
 var turns_counter = 0;
 
 $(document).ready(function(){
-  //homePage();
-  showTris();
+  homePage();
+  //showTris();
   addEventsOnButtons();
 
 });
@@ -146,7 +146,7 @@ function addEventsOnCells(){
     turns_counter++;
     if(checkTrisWins($(this))){
       $(".grid-item").off("click");
-      console.log("You win!");
+      console.log(player_turn=="player1" ? player1_name : player2_name, "won!");
       return;
     }else{
       $(this).off("click");
@@ -188,9 +188,8 @@ function checkTrisWins(cell){
 // --- CHECK TRIS ON ROWS
 function checkTrisOnRow(row, col, symb){
   var itemsOnRow = [];
-  itemsOnRow[0] = $($(".grid-item[row='"+row+"']")[0]).attr("symb");
-  itemsOnRow[1] = $($(".grid-item[row='"+row+"']")[1]).attr("symb");
-  itemsOnRow[2] = $($(".grid-item[row='"+row+"']")[2]).attr("symb");
+  for(var i=0;i<3;i++)
+    itemsOnRow[i] = $($(".grid-item[row='"+row+"']")[i]).attr("symb");
 
   if((itemsOnRow[0] == itemsOnRow[1]) && (itemsOnRow[0] == itemsOnRow[2]))
     return true;
@@ -201,9 +200,8 @@ function checkTrisOnRow(row, col, symb){
 // --- CHECK TRIS ON COLUMNS
 function checkTrisOnCol(row, col, symb){
   var itemsOnCol = [];
-  itemsOnCol[0] = $($(".grid-item[col='"+col+"']")[0]).attr("symb");
-  itemsOnCol[1] = $($(".grid-item[col='"+col+"']")[1]).attr("symb");
-  itemsOnCol[2] = $($(".grid-item[col='"+col+"']")[2]).attr("symb");
+  for(var i=0;i<3;i++)
+    itemsOnCol[i] = $($(".grid-item[col='"+col+"']")[i]).attr("symb");
 
   if((itemsOnCol[0] == itemsOnCol[1]) && (itemsOnCol[0] == itemsOnCol[2]))
     return true;
@@ -213,14 +211,21 @@ function checkTrisOnCol(row, col, symb){
 
 // --- CHECK TRIS ON DIAGONALS
 function checkTrisOnDiag(row, col, symb){
-  var itemsOnDiag = [];
-  itemsOnDiag[0] = $($(".grid-item[col='"+col+"']")[0]).attr("symb");
-  itemsOnDiag[1] = $($(".grid-item[col='"+col+"']")[1]).attr("symb");
-  itemsOnDiag[2] = $($(".grid-item[col='"+col+"']")[2]).attr("symb");
+  //primary diagonal    row=col
+  //secondary diagonal   row+col=n-1
 
-  if((itemsOnDiag[0] == itemsOnDiag[1]) && (itemsOnDiag[0] == itemsOnDiag[2]))
+  var grid_len = 3;
+  var itemsOnFirstDiag = [];
+  var itemsOnSecondDiag = [];
+  for(var i=0;i<grid_len;i++){   //first diagonal
+    itemsOnFirstDiag[i] = $(".grid-item[row='"+i+"'][col='"+i+"']").attr("symb");
+    itemsOnSecondDiag[i] = $(".grid-item[row='"+(grid_len-i-1)+"'][col='"+i+"']").attr("symb");
+  }
+
+  if((itemsOnFirstDiag[0] == itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] == itemsOnFirstDiag[2]))
     return true;
-
+  if((itemsOnSecondDiag[0] == itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] == itemsOnSecondDiag[2]))
+    return true;
 
   return false;
 }
