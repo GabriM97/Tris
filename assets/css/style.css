@@ -149,8 +149,7 @@ html, body{
   margin-right: auto;
   width: 30%;
 
-  /*background: rgba(100,100,255,0.95);*/
-  background: rgba(189,183,107,.95);
+  background: rgba(189,183,107,.85);
   border: 3px solid black;
   border-radius: 20px;
   text-align: center;
@@ -160,10 +159,11 @@ html, body{
 }
 
 #winner-container .player-name{
-  display: block;
+  display: inline-block;
+  font-weight: bold;
 }
 
-#winner-container button, #container > button{
+#winner-container button, #content > button{
   display: block;
   font-size: 1.1rem;
   margin: 30px auto;
@@ -173,11 +173,11 @@ html, body{
   cursor: pointer;
 }
 
-#winner-container button:hover, #container > button:hover{
+#winner-container button:hover, #content > button:hover{
   box-shadow: 2px 2px 15px 2px black;
 }
 
-#container > button{
+#content > button{
   margin-top: 70px;
   margin-bottom: 8px;
 }
