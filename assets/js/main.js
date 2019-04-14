@@ -1,6 +1,5 @@
 var player1_name = "";
 var player2_name = "";
-
 $(document).ready(function(){
   homePage();
   //showTris('player1');showWinner();
@@ -13,6 +12,7 @@ function homePage(){
   $("#container").empty();
 
   var content ='\
+  <img src="./assets/img/logo.png" alt="Tris logo" id="main-logo">\
   <h1 id="main-title">Tris Game!</h1> \
   <div id="form-container"> \
       <p>Player 1</p> \

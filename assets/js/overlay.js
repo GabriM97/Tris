@@ -28,8 +28,7 @@ function showWinner(){
 
 // --- PLAY AGAIN ---
 function playAgain(){
-  var play_again_dom = '\
-  <div id="winner-container" class="animated wobble">\
+  var play_again_dom = '<div id="winner-container" class="animated wobble">\
     <span>DRAW!</span>\
     <p>Nothing to do...<br>Play Again</p>\
     <button type="button" class="btn" name="play-again">Play Again</button>\
