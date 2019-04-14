@@ -1,13 +1,13 @@
 var player1_name = "Pl-1";
 var player2_name = "Pl-2";
-var player_turn = "player1";
+var player_turn = "";
 var player1_score = 0;
 var player2_score = 0;
 var turns_counter = 0;
 
 $(document).ready(function(){
   homePage();
-  //showTris();
+  //showTris('player1');showWinner();
   addEventsOnButtons();
 
 });
@@ -28,7 +28,6 @@ function homePage(){
     </div>';
 
   $("#container").append(content);
-  $("#container").removeClass("closed");
 }
 
 //--- BUTTONS START\RESET EVENT LISTENER ---
@@ -40,13 +39,23 @@ function addEventsOnButtons(){
       if(player1 == "" || player2 == ""){
         player1 = "Player1";
         player2 = "Player2";
+      }else{
+        player1_name = player1;
+        player2_name = player2;
       }
-      $(this).addClass("fadeOut");
-      player1_name = player1;
-      player2_name = player2;
-      showTris();
-    }else if ($(this).text() == "Reset") {
+      showTris("player1");
+    }else
+    if ($(this).text() == "Reset"){
       resetAll();
+    }else
+    if($(this).text() == "Play Again"){
+      showTris((player_turn=="player1") ? "player2" : "player1");
+    }
+    else
+    if($(this).text() == "Restart Game"){
+      player1_score = 0;
+      player2_score = 0;
+      showTris("player1");
     }
   });
 }
@@ -58,14 +67,20 @@ function resetAll(){
 }
 
 //--- SHOW TRIS \ START BUTTON ---
-function showTris(){
+function showTris(turn_id){
+  if($("#winner-container"))  $("#winner-container").remove();
+  $("#container").removeClass("disable");
   $("#container").empty();
-  $("#container").removeClass("fadeOut").removeClass("zoomInDown");
   $("#container").addClass("fadeIn");
 
+  turns_counter = 0;
+  player_turn = turn_id;
   showTrisData();
   showTrisGrid();
+  $("#tris-grid-container").after('<button type="button" class="btn" name="restart">Restart Game</button>');
+  $("#container .btn").after("<p id='restart-warning'>(You will lose all your points)</p>")
   addEventsOnCells();
+  addEventsOnButtons();
 }
 
 // --- TRIS - TOP INFO ---
@@ -133,24 +148,23 @@ function fixGridBorders(row,col){
 // --- CLICK EVENT ON TRIS GRID ---
 function addEventsOnCells(){
   $(".grid-item").on("click", function(){
-    // alert("click on " + $(this).attr("row") + "-" + $(this).attr("col"));
     if(player_turn == "player1"){
       $(this).css("background", "url('assets/img/x_icon.png')");
-      $(this).css("background-size", "cover");
       $(this).attr("symb","X");
     }else{
       $(this).css("background", "url('assets/img/o_icon.png')");
-      $(this).css("background-size", "cover");
       $(this).attr("symb","O");
     }
     turns_counter++;
     if(checkTrisWins($(this))){
       $(".grid-item").off("click");
-      console.log(player_turn=="player1" ? player1_name : player2_name, "won!");
-      return;
+      showWinner();
     }else{
       $(this).off("click");
-      changeTurn();
+      if(turns_counter == 9)
+        playAgain();
+      else
+        changeTurn();
     }
   });
 }
@@ -222,10 +236,51 @@ function checkTrisOnDiag(row, col, symb){
     itemsOnSecondDiag[i] = $(".grid-item[row='"+(grid_len-i-1)+"'][col='"+i+"']").attr("symb");
   }
 
-  if((itemsOnFirstDiag[0] == itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] == itemsOnFirstDiag[2]))
-    return true;
-  if((itemsOnSecondDiag[0] == itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] == itemsOnSecondDiag[2]))
+  if(((itemsOnFirstDiag[0] == itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] == itemsOnFirstDiag[2])) ||
+    ((itemsOnSecondDiag[0] == itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] == itemsOnSecondDiag[2])))
     return true;
 
   return false;
+}
+
+// --- WINNER ---
+function showWinner(){
+  var winner_dom = '\
+  <div id="winner-container" class="animated bounceIn">\
+    <div class="player-info" id="'+ player_turn +'">\
+      <div class="player-icon"></div>\
+      <span>PLAYER</span>\
+      <p class="player-name">'+ (player_turn=="player1" ? player1_name : player2_name) +'</p>\
+      <span>WON!</span>\
+    </div>\
+    <button type="button" class="btn" name="play-again">Play Again</button>\
+  </div>';
+
+  if(player_turn=="player1")
+    $("#player1 .player-points").text(++player1_score);
+  else
+    $("#player2 .player-points").text(++player2_score);
+
+  setTimeout(() => {
+                      $("#container").addClass("disable");
+                      $("body").append(winner_dom);
+                      addEventsOnButtons();
+                   }, 500);
+  $(".grid-item").css("cursor","default");
+}
+
+// --- PLAY AGAIN ---
+function playAgain(){
+  var play_again_dom = '\
+  <div id="winner-container" class="animated wobble">\
+    <p>Nothing to do...<br>Play Again</p>\
+    <button type="button" class="btn" name="play-again">Play Again</button>\
+  </div>';
+
+  setTimeout(() => {
+                      $("#container").addClass("disable");
+                      $("body").append(play_again_dom);
+                      addEventsOnButtons();
+                   }, 500);
+  $(".grid-item").css("cursor","default");
 }
