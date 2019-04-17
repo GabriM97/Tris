@@ -130,7 +130,6 @@ function changeTurn(player_id){
 // --- CHECK WINS ---
 function checkTrisWins(cell){
   if(turns_counter < 5)  return;
-  // alert("possible tris");
 
   var row = cell.attr("row");
   var col = cell.attr("col");
@@ -150,7 +149,7 @@ function checkTrisOnRow(row, col, symb){
   for(var i=0;i<3;i++)
     itemsOnRow[i] = $($(".grid-item[row='"+row+"']")[i]).attr("symb");
 
-  if((itemsOnRow[0] == itemsOnRow[1]) && (itemsOnRow[0] == itemsOnRow[2]))
+  if((itemsOnRow[0] === itemsOnRow[1]) && (itemsOnRow[0] === itemsOnRow[2]))
     return true;
 
   return false;
@@ -163,7 +162,7 @@ function checkTrisOnCol(row, col, symb){
   for(var i=0;i<3;i++)
     itemsOnCol[i] = $($(".grid-item[col='"+col+"']")[i]).attr("symb");
 
-  if((itemsOnCol[0] == itemsOnCol[1]) && (itemsOnCol[0] == itemsOnCol[2]))
+  if((itemsOnCol[0] === itemsOnCol[1]) && (itemsOnCol[0] === itemsOnCol[2]))
     return true;
 
   return false;
@@ -178,14 +177,23 @@ function checkTrisOnDiag(row, col, symb){
   var grid_len = 3;
   var itemsOnFirstDiag = [];
   var itemsOnSecondDiag = [];
-  for(var i=0;i<grid_len;i++){   //first diagonal
+  for(var i=0;i<grid_len;i++){
     itemsOnFirstDiag[i] = $(".grid-item[row='"+i+"'][col='"+i+"']").attr("symb");
     itemsOnSecondDiag[i] = $(".grid-item[row='"+(grid_len-i-1)+"'][col='"+i+"']").attr("symb");
   }
 
-  if(((itemsOnFirstDiag[0] == itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] == itemsOnFirstDiag[2])) ||
-    ((itemsOnSecondDiag[0] == itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] == itemsOnSecondDiag[2])))
-    return true;
-
+  if(row==1 && col==1){  //element on center  --  check on first and second diag
+    if(((itemsOnFirstDiag[0] === itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] === itemsOnFirstDiag[2])) ||
+      ((itemsOnSecondDiag[0] === itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] === itemsOnSecondDiag[2])))
+        return true;
+  }else{
+    if(row==col){  //first diagonal
+      if(itemsOnFirstDiag[0] && ((itemsOnFirstDiag[0] === itemsOnFirstDiag[1]) && (itemsOnFirstDiag[0] === itemsOnFirstDiag[2])))
+        return true;
+    }else{    //second diagonal
+      if(itemsOnSecondDiag[0] && ((itemsOnSecondDiag[0] === itemsOnSecondDiag[1]) && (itemsOnSecondDiag[0] === itemsOnSecondDiag[2])))
+        return true;
+    }
+  }
   return false;
 }
